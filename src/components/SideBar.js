@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-
 
 const SideBar = ({ onFormChange }) => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-    });
-
-    const [newField, setNewField] = useState('');
+    const [formData, setFormData] = useState({});
 
     useEffect(() => {
         onFormChange(formData);
@@ -20,10 +13,8 @@ const SideBar = ({ onFormChange }) => {
     };
 
     const handleAddField = () => {
-        if (newField.trim() !== '') {
-            setFormData({ ...formData, [newField]: '' });
-            setNewField('');
-        }
+        const fieldKey = `${Object.keys(formData).length + 1}`;
+        setFormData({ ...formData, [fieldKey]: '' });
     };
 
     return (
@@ -32,26 +23,24 @@ const SideBar = ({ onFormChange }) => {
                 <i className="bi bi-house-door"></i> Home
             </a>
             <form className="sidebar-form">
-                {Object.keys(formData).map((key) => (
-                    <div className="form-group" key={key}>
-                        <label htmlFor={key}>{key.charAt(0).toUpperCase() + key.slice(1)}:</label>
-                        <input
-                            type="text"
-                            id={key}
-                            name={key}
-                            value={formData[key]}
-                            onChange={handleChange}
-                        />
-                    </div>
-                ))}
+                {Object.keys(formData).length === 1 ? (
+                    <h1>Title</h1>
+                ) : (
+                    Object.keys(formData).map((key) => (
+                        <div className="form-group" key={key}>
+                            <label htmlFor={key} hidden="hidden">{key}</label>
+                            <input
+                                type="text"
+                                id={key}
+                                name={key}
+                                value={formData[key]}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    ))
+                )}
             </form>
             <div className="add-field">
-                <input
-                    type="text"
-                    value={newField}
-                    onChange={(e) => setNewField(e.target.value)}
-                    placeholder="New field name"
-                />
                 <button type="button" onClick={handleAddField}>
                     Add Field
                 </button>
